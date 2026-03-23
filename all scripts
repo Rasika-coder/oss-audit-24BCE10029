@@ -1,0 +1,154 @@
+All 5 Shell Scripts:
+Script 1 — System Identity Report
+Code (script1.sh)
+#!/bin/bash
+# Script 1: System Identity Report
+# Author: Rasika Jain | Course: Open Source Software
+
+# -------- Variables --------
+STUDENT_NAME="Rasika Jain"
+SOFTWARE_CHOICE="Git"
+
+# -------- System Information --------
+KERNEL=$(uname -r)                          # Get kernel version
+USER_NAME=$(whoami)                         # Get current user
+HOME_DIR=$HOME                              # Get home directory
+UPTIME=$(uptime -p)                         # Get system uptime
+DATE_TIME=$(date)                           # Get current date and time
+
+# Get Linux distribution name from system file
+DISTRO=$(grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d '"')
+
+# -------- Display Output --------
+echo "======================================"
+echo " Open Source Audit — $STUDENT_NAME"
+echo "======================================"
+
+echo "Chosen Software  -> $SOFTWARE_CHOICE"
+echo "Linux Distro     -> $DISTRO"
+echo "Kernel Version   -> $KERNEL"
+echo "Current User     -> $USER_NAME"
+echo "Home Directory   -> $HOME_DIR"
+echo "System Uptime    -> $UPTIME"
+echo "Current DateTime -> $DATE_TIME"
+
+# -------- License Information --------
+echo "--------------------------------------"
+echo "This system follows open-source concepts"
+echo "and is generally distributed under GNU GPL license."
+echo "This output is generated as part of my project work."
+echo "--------------------------------------"
+
+This script displays important system information in a structured format. It shows details like Linux distribution name, kernel version, logged-in user, home directory, uptime, and current date and time.
+The script uses variables to store values and command substitution $( ) to execute Linux commands such as uname, whoami, and uptime. It also reads system details from /etc/os-release to get the distribution name. The echo command is used for displaying output in a formatted way.
+Through this script, I understood how to use basic shell scripting concepts like variables, command substitution, and formatted output. I also got practical experience working with system-level commands in Linux.
+Script 2 — FOSS Package Inspector
+.sh file
+#!/bin/bash
+# Script 2: FOSS Package Inspector
+# Author: Rasika Jain
+
+# -------- Variable --------
+PACKAGE="firefox"   # You can change this (e.g., vlc, git, mysql)
+
+# -------- Check if package is installed --------
+if dpkg -l | grep -w $PACKAGE > /dev/null 2>&1
+then
+    echo "$PACKAGE is installed."
+
+    # Show version and description
+    dpkg -l | grep -w $PACKAGE
+
+else
+    echo "$PACKAGE is NOT installed."
+fi
+
+# -------- Case Statement --------
+case $PACKAGE in
+    firefox)
+        echo "Firefox: a privacy-focused open source web browser"
+        ;;
+    vlc)
+        echo "VLC: a powerful open source media player for all formats"
+        ;;
+    git)
+        echo "Git: distributed version control system for developers"
+        ;;
+    mysql)
+        echo "MySQL: open source database powering web applications"
+        ;;
+    *)
+        echo "Unknown package: open source software for general use"
+        ;;
+Esac
+
+
+
+Paragraph Explanation:
+This script checks whether a specified open-source software package is installed on the system using the dpkg -l command combined with grep. If the package is found, it displays its details such as version and description; otherwise, it reports that the package is not installed. The script uses an if-then-else statement for decision-making and a case statement to print a short description of the software based on its name. It also demonstrates the use of pipes (|) with grep for filtering output. Overall, the script helps in inspecting installed packages and understanding their purpose.
+
+Script 3 — Disk and Permission Auditor
+.ch file:
+#!/bin/bash
+# Script 3: Disk and Permission Auditor
+# Author: Rasika Jain
+
+# -------- Directories to check --------
+DIRS=("/etc" "/var/log" "/home" "/usr/bin" "/tmp")
+
+echo "Directory Audit Report"
+echo "----------------------"
+
+# -------- Loop through directories --------
+for DIR in "${DIRS[@]}"; do
+    if [ -d "$DIR" ]; then
+        # Get permissions, owner, group
+        PERMS=$(ls -ld $DIR | awk '{print $1, $3, $4}')
+        
+        # Get size
+        SIZE=$(du -sh $DIR 2>/dev/null | cut -f1)
+        
+        echo "$DIR => Permissions: $PERMS | Size: $SIZE"
+    else
+        echo "$DIR does not exist on this system"
+    fi
+done
+
+echo ""
+echo "Software Configuration Directory Check"
+echo "--------------------------------------"
+
+# -------- Check config directory (example: git) --------
+CONFIG_DIR="$HOME/.gitconfig"
+
+if [ -e "$CONFIG_DIR" ]; then
+    PERMS=$(ls -ld $CONFIG_DIR | awk '{print $1, $3, $4}')
+    echo "$CONFIG_DIR exists => Permissions: $PERMS"
+else
+    echo "$CONFIG_DIR does not exist"
+Fi
+Paragraph Explanation:
+This script audits important system directories by looping through a predefined list using a for loop. For each directory, it checks whether it exists and then retrieves its permissions, owner, and group using the ls -ld command combined with awk. The script also calculates the disk space usage using the du -sh command and extracts relevant output using cut. Additionally, it checks for the existence of a software configuration file (such as Git’s .gitconfig) and displays its permissions. This script demonstrates concepts like loops, conditional statements, and text processing using command-line utilities.
+
+Script 4 — Log File Analyzer
+.sh file:
+#!/bin/bash
+# Script 4: Log File Analyzer
+# Author: Rasika Jain
+
+# -------- Arguments --------
+LOGFILE=$1
+KEYWORD=${2:-"error"}   # Default keyword = error
+COUNT=0
+
+# -------- Check file exists --------
+if [ ! -f "$LOGFILE" ]; then
+    echo "Error: File $LOGFILE not found."
+    exit 1
+fi
+
+# -------- Retry if file is empty (do-while style) --------
+while [ ! -s "$LOGFILE" ]; do
+    echo "File is empty. Waiting for content..."
+    sleep 2
+done
